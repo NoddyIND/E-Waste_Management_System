@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	font-family: 'Montserrat', sans-serif;
+	height: 100vh;
+	margin: -20px 0 50px;
+	
+}
+
+form {
+	display: flex;
+	align-items: left;
+	flex-direction: column;
+	padding: 0 50px;
+	text-align: center;
+}
+
+.container {
+	text-align: center;
+	background-color: #fff;
+	background: -webkit-linear-gradient(to right, #17bd4e, #38e772);
+	background: linear-gradient(to right, #17bd4e, #38e772);
+	border-radius: 10px;
+  	box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+			0 10px 10px rgba(0,0,0,0.22);
+	width: 700px;
+	max-width: 100%;
+	min-height: 480px;
+}
+
+.form-container {
+	top: 0;
+	height: 100%;
+	transition: all 0.6s ease-in-out;
+}
+
+.sign-in-container {
+	left: 0;
+	width: 100%;
+	z-index: 2;
+}
+
+input {
+	border-radius: 10px;
+	background-color: #eee;
+	border: none;
+	padding: 12px 15px;
+	margin: 8px 0;
+	width: 100%;
+}
+
+h1 {
+	font-weight: bold;
+	color: white;
+	margin: 0;
+}
+
+button {
+	margin-left: 150px;
+	width: 50%;
+	border-radius: 10px;
+	border: 0px solid;
+	background-color: #17bd4e;
+	color: #FFFFFF;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 12px 45px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	transition: transform 80ms ease-in;
+	height: 50px;
+}
+button:hover{
+	color: green;
+  border: 1px solid #17bd4e;
+	background-color: white;
+}
+
+.backbtn{
+	margin-left: 0px;
+	width: 300px;
+	margin-top: 30px;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+		<h1 style="margin-top: 30px;">Facility Login</h1><br><br><br><br>
+    <div class="form-container sign-in-container">
+    <form action="facility_login.php" method="post">
+        <input type="text" name="email" placeholder="Email"><br>
+        <input type="password" name="password" placeholder="Password">
+		<br>
+        <button type="submit">Login</button>
+    </form>
+	<button class="backbtn" onclick="window.location.href = 'index.html'">Back</button>
+    </div>
+    </div>
+</body>
+</html>

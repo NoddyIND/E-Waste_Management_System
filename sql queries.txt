@@ -1,0 +1,24 @@
+use ewaste;
+
+create table user(id int primary key auto_increment, name varchar(20) not null, address varchar(40) not null, phone bigint, email varchar(30) UNIQUE not null, password varchar(30) not null, wtype varchar(20)not null);
+desc user;
+drop table user;
+select * from user;
+truncate table user;
+
+create table pickup(id int primary key auto_increment, cust_name varchar(20), location varchar(20), phone bigint, email varchar(30), wname varchar(20), qty int);
+drop table pickup;
+select * from pickup;
+truncate table pickup;
+
+create table facility(id int primary key auto_increment, email varchar(30), password varchar(20), location varchar(20));
+
+insert into facility(email, password, location) values('Sourabh@gmail.com', 12345, 'kothrud');
+insert into facility(email, password, location) values('aditya@gmail.com', 1234, 'karve nagar');
+select * from facility;
+
+create table facility_center(id int primary key auto_increment, cust_name varchar(30), phone bigint, email varchar(30), location varchar(30), wname varchar(20), qty int);
+select * from facility_center;
+
+drop table facility_center;
+truncate table facility_center;

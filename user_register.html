@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>User Registration</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+* {
+	box-sizing: border-box;
+}
+h1{
+	color:white;
+}
+h3, a{
+	display: block;
+	align-items:left;
+	color: black;
+	text-decoration: none;
+}
+h3, a:hover{
+	align-items:left;
+	color: green;
+	text-decoration: none;
+}
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	font-family: 'Montserrat', sans-serif;
+	height: 100vh;
+	margin: -20px 0 50px;
+	
+}
+
+form {
+	color: white;
+	display: flex;
+	align-items: left;
+	justify-content: center;
+	flex-direction: column;
+	padding: 0 50px;
+	height: 100%;
+	text-align: center;
+}
+
+.container {
+	margin-top:150px;
+	background: -webkit-linear-gradient(to right, #17bd4e, #38e772);
+	background: linear-gradient(to right, #17bd4e, #38e772);
+	background-color: #fff;
+	border-radius: 10px;
+  	box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+			0 10px 10px rgba(0,0,0,0.22);
+	position: relative;
+	overflow: hidden;
+	width: 700px;
+	max-width: 100%;
+	min-height: 480px;
+}
+
+.form-container {
+	position: absolute;
+	margin-top: 15px;
+	top: 0;
+	height: 100%;
+	transition: all 0.6s ease-in-out;
+}
+
+.sign-up-container {
+	left: 0;
+	width: 100%;
+	z-index: 2;
+}
+
+input {
+	background-color: white;
+	border: 1px solid white;
+	border-radius: 5px;
+	padding: 12px 15px;
+	margin: 8px 0;
+	width: 100%;
+}
+input:hover{
+	background-color: #fff;
+}
+
+input::placeholder{
+	color: black;
+}
+input:focus{
+	background-color: white;
+}
+
+h1 {
+	font-weight: bold;
+	/* padding: 15px; */
+	margin-top:15px;
+}
+
+button {
+	display: inline;
+	border-radius: 10px;
+	border: 1px solid white;
+	background-color: #17bd4e;
+	color: #FFFFFF;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 12px 45px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	transition: transform 80ms ease-in;
+}
+button:hover{
+	color: green;
+	background-color: white;
+}
+
+select {
+	position: relative;
+  	/* font-family: Arial; */
+  background-color: transparent;
+  padding: 0 1em 0 0;
+  margin: 0;
+  width: 100%;
+  height: 40px;
+  /* font-family: inherit;
+  font-size: inherit; */
+  cursor: inherit;
+  line-height: inherit;
+  z-index: 1;
+  border: 1px solid white;
+  color: black;
+  padding-left: 10px;
+
+}
+
+.selectWrapper{
+  
+  border-radius:6px;
+  display:inline-block;
+  overflow:hidden;
+  background:white;
+  /* border:0px solid #38e772; */
+}
+
+    </style>
+</head>
+<body>
+	
+    <div class="container" id="container">
+		<h1 align="center">Register</h1>
+        <div class="form-container sign-up-container">
+            <form action="user_register.php" method="POST">
+                <input type="text" name="name" id="text" placeholder="Name">
+				<div class = "selectWrapper">
+                <select name="address" id="address">
+					<option value="Address">Address</option>
+                    <option value="Kothrud">Kothrud</option>
+                    <option value="Karve Nagar">Karve Nagar</option>
+                    <option value="Katraj">Katraj</option>
+                </select>
+				</div>
+                <input type="number" name="phone" id="" placeholder="Contact number">
+                <input type="text" name="email" placeholder="Email">
+                <input type="password" name="password" placeholder="password">
+                <br>
+                <button type="submit">Submit</button>
+            </form>
+			
+        </div>
+    </div>
+	<h3 ><a href="index.html" class="fa fa-arrow-left">Back</a></h3>
+	
+</body>
+</html>
