@@ -1,24 +1,186 @@
-use ewaste;
+create database ewaste_2;
+use ewaste_2;
 
-create table user(id int primary key auto_increment, name varchar(20) not null, address varchar(40) not null, phone bigint, email varchar(30) UNIQUE not null, password varchar(30) not null, wtype varchar(20)not null);
-desc user;
-drop table user;
-select * from user;
-truncate table user;
+create table customer(cust_id int PRIMARY KEY AUTO_INCREMENT, cust_name varchar(30), address varchar(30), email varchar(30) UNIQUE, phone bigint, pincode int, password int NOT NULL);
+create table facility_center(facility_id int PRIMARY KEY AUTO_INCREMENT, name varchar(30), location varchar(30), pincode int,email varchar(30) unique, password int NOT NULL);
+create table waste(waste_id int PRIMARY KEY AUTO_INCREMENT, name varchar(30), weight int, points int default 10);
+create table drive(drive_id int PRIMARY KEY AUTO_INCREMENT, facility_id int, email varchar(30) unique, password int, is_free int, foreign key (facility_id) REFERENCES facility_center(facility_id));
 
-create table pickup(id int primary key auto_increment, cust_name varchar(20), location varchar(20), phone bigint, email varchar(30), wname varchar(20), qty int);
-drop table pickup;
-select * from pickup;
-truncate table pickup;
+desc selects;
 
-create table facility(id int primary key auto_increment, email varchar(30), password varchar(20), location varchar(20));
+select * from customer;
+insert into waste(name, weight, points) values('Computer', 10, 50);
+insert into waste(name, weight, points) values('Phone', 5, 25);
+insert into waste(name, weight, points) values('PowerBank', 2, 10);
+insert into waste(name, weight, points) values('Wires', 0.1, 2);
+insert into waste(name, weight, points) values('Bulbs', 0.5, 3);
+insert into waste(name, weight, points) values('Cameras', 1, 7);
+insert into waste(name, weight, points) values('Fridges', 20, 100);
+insert into waste(name, weight, points) values('Dry_cells', 0.2, 3);
+insert into waste(name, weight, points) values('AC', 8, 40);
+insert into waste(name, weight, points) values('Watches', 1, 5);
+insert into waste(name, weight, points) values('Speakers', 2, 15);
+insert into waste(name, weight, points) values('Remote',1 , 8);
+insert into waste(name, weight, points) values('Dryers', 1, 10);
+insert into waste(name, weight, points) values('Charges', 1, 8);
+insert into waste(name, weight, points) values('CD',1 , 4);
+insert into waste(name, weight, points) values('Dryers', 1, 10);
+insert into waste(name, weight, points) values('Fan', 4, 15);
+insert into waste(name, weight, points) values('DVD',1 , 5);
+insert into waste(name, weight, points) values('CD_player', 2, 8);
+insert into waste(name, weight, points) values('Kettle', 1, 10);
+insert into waste(name, weight, points) values('Grinder',1 , 8);
+insert into waste(name, weight, points) values('Juicer', 2, 10);
 
-insert into facility(email, password, location) values('Sourabh@gmail.com', 12345, 'kothrud');
-insert into facility(email, password, location) values('aditya@gmail.com', 1234, 'karve nagar');
-select * from facility;
 
-create table facility_center(id int primary key auto_increment, cust_name varchar(30), phone bigint, email varchar(30), location varchar(30), wname varchar(20), qty int);
+select * from facility_center;
+insert into facility_center(name, location, pincode, email, password) values('Karve_Center', 'Karve Nagar', 411038, 'karve@gmail.com', 123);
+
+desc drive;
+insert into drive(facility_id, email, password) values(2,'drive3@gmail.com', 12);
+
+
+
+select * from selects;
+
+select * from drive;
+
+
+create table recycle_decompose(select_id int UNIQUE, recycle_decompose int default 0, FOREIGN KEY (select_id) REFERENCES selects(select_id));
+
+desc schedule;
+select * from recycle_decompose;
+
+
+
+
+#recycle
+select w.weight, s.qty, c.cust_name from waste as w join selects as s on w.waste_id = s.waste_id join drive as d on s.drive_id = d.drive_id join customer as c on c.cust_id = s.cust_id join recycle_decompose as rd on rd.select_id=s.select_id where d.is_collected = 1 and rd.recycle_decompose=1; 
+
+#decompose
+select w.weight, s.qty, c.cust_name from waste as w join selects as s on w.waste_id = s.waste_id join drive as d on s.drive_id = d.drive_id join customer as c on c.cust_id = s.cust_id join recycle_decompose as rd on rd.select_id=s.select_id where d.is_collected = 1 and rd.recycle_decompose=2;  
+
+select w.name, s.qty, c.cust_name, rd.recycle_decompose from selects as s join waste as w on w.waste_id = s.waste_id join customer as c on c.cust_id = s.cust_id join recycle_decompose as rd on rd.select_id=s.select_id;  
+  
+  
+#drive not initiated  
+select s.select_id, w.name, s.qty from selects as s join waste as w on w.waste_id = s.waste_id join customer as c on c.cust_id = s.cust_id where s.drive_id=0;
+
+update selects set waste_id = 1, qty = 3 where select_id = 3 and drive_id=0;
+
+delete from selects where select_id = 3 and drive_id = 0;
+
+
+
+select * from selects;
+
+select w.weight as weight, s.qty as qty, c.cust_name from waste as w join selects as s on w.waste_id = s.waste_id join drive as d on s.drive_id = d.drive_id join customer as c on c.cust_id = s.cust_id where d.is_collected = 1 and c.cust_id = 1;
+
+select w.weight as weight, s.qty as qty from waste as w join selects as s on w.waste_id = s.waste_id join drive as d on s.drive_id = d.drive_id join customer as c on c.cust_id = s.cust_id join recycle_decompose as rd on rd.select_id=s.select_id where d.is_collected = 1 and rd.recycle_decompose=1 and c.cust_id= 1;
+
+select w.weight as weight, s.qty as qty from waste as w join selects as s on w.waste_id = s.waste_id join drive as d on s.drive_id = d.drive_id join customer as c on c.cust_id = s.cust_id join recycle_decompose as rd on rd.select_id=s.select_id where d.is_collected = 1 and rd.recycle_decompose=2 and c.cust_id = 1;
+
+select w.weight as weight, s.qty as qty from waste as w join selects as s on w.waste_id = s.waste_id join drive as d on s.drive_id = d.drive_id join customer as c on c.cust_id = s.cust_id join recycle_decompose as rd on rd.select_id=s.select_id where d.is_collected = 1 and rd.recycle_decompose=1 and c.cust_id= 2;
+
+select w.weight as weight, s.qty as qty, c.cust_name from waste as w join selects as s on w.waste_id = s.waste_id join drive as d on s.drive_id = d.drive_id join customer as c on c.cust_id = s.cust_id where d.is_collected = 1 and c.cust_id = 1;
+
+select w.weight as weight, s.qty as qty from waste as w join selects as s on w.waste_id = s.waste_id join drive as d on s.drive_id = d.drive_id join customer as c on c.cust_id = s.cust_id join recycle_decompose as rd on rd.select_id=s.select_id where d.is_collected = 1 and rd.recycle_decompose=1 and c.cust_id= 1;
+
+select s.select_id, c.cust_name, w.name, s.qty from selects as s join customer as c on s.cust_id = c.cust_id join waste as w on w.waste_id = s.waste_id  where s.drive_id=0 and c.cust_id=1;
+
+select * from drive;
+insert into drive(facility_id, email, password) values(1,'drive2@gmail.com', '1234');
+
+
+select * from selects;
+
+alter table selects 
+add column is_collected int default 0;
+
+show tables;
+
+select s.select_id as select_id, w.name as name, s.qty as qty from selects as s join waste as w on w.waste_id = s.waste_id join customer as c on c.cust_id = s.cust_id join schedule as sch on sch.drive_id = s.drive_id where s.drive_id=1 and s.is_collected=0 and c.cust_id = 1;
+
+create table schedule(schedule_id int PRIMARY KEY auto_increment, drive_id int, facility_id int, schedule_date date, start_time time, finish_time time, is_completed int default 0, FOREIGN KEY (drive_id) REFERENCES drive(drive_id), FOREIGN KEY (facility_id) REFERENCES facility_center(facility_id));
+
+select * from schedule;
+
+select * from drive;
+update drive set is_free = 0 where drive_id=2;
+
+
+
+drop table schedule;
+alter table selects 
+add FOREIGN KEY (facility_id) REFERENCES facility_center(facility_id);
+
+
+
 select * from facility_center;
 
-drop table facility_center;
-truncate table facility_center;
+
+delimiter $$
+CREATE TRIGGER mark_schedule AFTER INSERT ON schedle FOR EACH ROW
+BEGIN
+UPDATE selects SET schedule_id = new.schedule_id WHERE facility_id = new.facility_id;
+END $$
+
+
+delimiter $$
+CREATE TRIGGER finish_scheduled_drive AFTER UPDATE ON selects FOR EACH ROW
+BEGIN
+declare remaining_collection int default 0;
+SET remaining_collection = (SELECT COUNT(*) FROM selects WHERE is_collected = 0 AND schedule_id = new.schedule_id);
+IF remaining_collection = 0 THEN
+UPDATE schedule SET is_completed = 1 WHERE schedule_id = new.schedule_id;
+END IF;
+END $$
+
+select * from schedule;
+delete from schedule where schedule_id=6;
+
+SELECT d.drive_id, s.schedule_date, s.start_time, s.finish_time  FROM drive as d join schedule as s on d.drive_id = s.drive_id where d.facility_id=1 and d.is_free=1 and s.is_completed=0;
+
+
+SELECT facility_id FROM drive WHERE email = 'drive@gmail.com';
+select * from recycle_decompose;
+
+
+select * from selects;
+
+
+
+select schedule_id from schedule order by schedule_id desc limit 1;
+
+SELECT s.qty, w.name, w.weight, c.cust_name, s.select_id FROM selects as s JOIN waste as w ON w.waste_id = s.waste_id JOIN customer as c ON c.cust_id = s.cust_id JOIN schedule as sch on sch.schedule_id = s.schedule_id WHERE s.is_collected = 0 AND s.facility_id = 1 and sch.drive_id=2;
+
+select * from drive;
+
+
+
+select is_collected from selects as s join schedule as sch on s.schedule_id = sch.schedule_id where s.is_collected=0 and sch.schedule_id = 7; 
+
+select * from schedule;
+select sch.schedule_id from schedule as sch join drive as d on sch.drive_id = d.drive_id where d.email = "drive2@gmail.com" and sch.is_completed=0;
+
+
+select d.drive_id from drive as d join schedule as sch on d.drive_id = sch.drive_id where sch.schedule_id=8;
+
+select * from drive join facility_center on drive.facility_id = facility_center.facility_id;
+
+select drive_id from drive where email='drive@gmail.com';
+
+select s.select_id as select_id, w.name as name, s.qty as qty, sch.schedule_id, sch.start_time, sch.finish_time, sch.schedule_date from selects as s join waste as w on w.waste_id = s.waste_id join customer as c on c.cust_id = s.cust_id join schedule as sch on sch.schedule_id = s.schedule_id where s.schedule_id !=0 and c.cust_id = 1 and s.is_collected=0;
+
+select * from waste;
+select * from recycle_decompose;
+
+select w.waste_id as waste_id, w.name as waste_name, w.weight,s.qty, rd.recycle_decompose,c.cust_name, sch.schedule_date,s.facility_id from waste as w join selects as s on s.waste_id = w.waste_id join recycle_decompose as rd on rd.select_id=s.select_id join schedule as sch on sch.schedule_id = s.schedule_id join customer as c on c.cust_id = s.cust_id where sch.schedule_date between '2022-11-15' and '2022-11-16' and s.facility_id=1;
+
+select s.select_id as select_id,s.is_collected, w.name as name, s.qty as qty, sch.schedule_id, sch.start_time, sch.finish_time, sch.schedule_date from selects as s join waste as w on w.waste_id = s.waste_id join customer as c on c.cust_id = s.cust_id join schedule as sch on sch.schedule_id = s.schedule_id where s.schedule_id !=0 and c.cust_id = 1 and s.is_collected=0;
+
+select * from facility_center;
+
+
+select * from selects;
+select * from schedule;
