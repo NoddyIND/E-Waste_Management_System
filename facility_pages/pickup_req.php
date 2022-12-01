@@ -1,8 +1,8 @@
 <?php
+include '../sqlconn.php';
 session_start();
 if (!isset($_SESSION["loggedIn"]) || !$_SESSION["loggedIn"]) {
     header("Location: facility_login.html");
-    
 }
 ?>
 <!DOCTYPE html>
@@ -12,7 +12,6 @@ if (!isset($_SESSION["loggedIn"]) || !$_SESSION["loggedIn"]) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
 <title>Document</title>
@@ -109,63 +108,49 @@ button:hover{
 	width: 300px;
 	margin-top: 30px;
 }
-.logout-btn{
-	margin-top: 70px;
-    margin-left: 70%;
-	margin-bottom: 30px;
-	width: 150px;
-	border-radius: 10px;
-	border: 0px solid;
-	background-color: #17bd4e;
-	color: #FFFFFF;
-	font-size: 12px;
-	font-weight: bold;
-	padding: 12px 45px;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	height: 50px;
-}
-.logout-btn:hover{
-	color: green;
-  border: 1px solid #17bd4e;
-	background-color: white;
-}
 </style>
 <body>
-<button class="logout-btn" onclick="window.location.href='../admin_logout.php'">Logout</button>
+
 <div class="container" id="container">
 
-<h1 style="margin-top:30px ;">Kothrud Pickup Requests</h1>
 
 <?php
-include '../sqlconn.php';
-$sql = "select p.id, p.email, u.name, w.waste_type, p.qty from pickup as p join user as u on u.email = p.email join waste_types as w on w.waste_id = p.wid where u.address = 'Kothrud' and p.is_collected = 1 and recycle_decompose = 0";
+$locationQuery = "SELECT location FROM facility_center WHERE email = '".$_SESSION['email']."' ";
+$querExec = mysqli_query($conn, $locationQuery);
+$loc = mysqli_fetch_assoc($querExec);
+echo "<h1 style='margin-top:30px ;'>".$loc['location']." Pickup Requests</h1>";
+$sql = "SELECT s.qty, w.name, w.weight, s.cust_id, s.select_id FROM selects as s JOIN waste as w ON w.waste_id = s.waste_id JOIN customer as c ON c.cust_id = s.cust_id WHERE c.address = '".$loc['location']."' ";
 $result = mysqli_query($conn, $sql);
+
 if(mysqli_fetch_assoc($result) == false)
 {
     echo '<h3 style="margin-top:50px; "> Nothing to Display</h3>';
 }
 else{
-    ?>
+
+
+
+?>
 
 <table class="table table-bordered table-hover" style="margin-top: 50px;">
             <thead>
                 <tr>
-                    <th scope="col">Customer Name</th>
+				<th scope="col">Customer Name</th>
                     <th scope="col">Waste Name</th>
                     <th scope="col">Quantity</th>
-                    <th scope="col">Recycle</th>
-                    <th scope="col">Decompose</th>
+					<th scope="col">Weight</th>
                 </tr>
             </thead>
             <tbody>
             <?php
             
-              $sql = "select p.id, p.email, u.name, w.waste_type, p.qty from pickup as p join user as u on u.email = p.email join waste_types as w on w.waste_id = p.wid where u.address = 'Kothrud' and p.is_collected = 1 and recycle_decompose = 0";
-              $result = mysqli_query($conn, $sql);
+			$locationQuery = "SELECT location FROM facility_center WHERE email = '".$_SESSION['email']."' ";
+			$querExec = mysqli_query($conn, $locationQuery);
+			$loc = mysqli_fetch_assoc($querExec);
+			$sql = "SELECT s.qty, w.name, w.weight, s.cust_id, s.select_id, c.cust_name FROM selects as s JOIN waste as w ON w.waste_id = s.waste_id JOIN customer as c ON c.cust_id = s.cust_id WHERE c.address = '".$loc['location']."' and s.schedule_id = 0";
+			$result = mysqli_query($conn, $sql);
               while ($row = mysqli_fetch_assoc($result)) {
-                  
-                  echo '<tr><td>' . $row["name"] . '</td><td>' . $row["waste_type"] . '</td><td>' . $row['qty'] .'</td><td><a class="btn btn-success" href="kothrud_recycle.php?email=' . $row["email"] .'&id='.$row["id"].'" role="button">Recycle</a></td></td><td><a class="btn btn-success" href="kothrud_decompose.php?email=' . $row["email"] .'&id='.$row["id"].'" role="button">Decompose</a></td>';
+                  echo '<tr><td>' . $row["cust_name"] . '</td><td>' . $row["name"] . '</td><td>' . $row['qty'] .'</td><td>'.($row['weight'] * $row['qty']).'</td></td></tr>';
               }
 
               ?>
@@ -173,10 +158,11 @@ else{
         </table>
 
         <?php
-        }
-        ?>
 
-        <a class="btn btn-success btn-lg" href="kothrud.php" role="button" style="margin-top: 50px; margin-bottom:10px;">Back</a>
+            }
+            ?>
+
+        <a class="btn btn-success btn-lg" href="pickup_req_data.php" role="button" style="margin-top: 50px;">Back</a>
 
 </div>
     

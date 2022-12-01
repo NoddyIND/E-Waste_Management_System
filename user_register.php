@@ -7,9 +7,10 @@ $address = $_POST["address"];
 $phone = $_POST["phone"];
 $email = $_POST["email"];
 $password = $_POST["password"];
+$pincode = $_POST["pincode"];
 
 
-$sql1 = "select * from user";
+$sql1 = "select * from customer";
 $result = mysqli_query($conn, $sql1);
 while ($row = mysqli_fetch_assoc($result)) {
     if ($row['email'] == $email) {
@@ -20,7 +21,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
         
 
-$sql = "INSERT INTO user(name, address, phone, email, password) VALUES ('$name', '$address', '$phone', '$email','$password')";
+$sql = "INSERT INTO customer(cust_name, address, email, phone, pincode, password) VALUES ('$name', '$address', '$email', $phone,$pincode,'$password')";
 $run = mysqli_query($conn, $sql);
 if ($run == true) {
     echo '<script type="text/javascript">

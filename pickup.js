@@ -78,3 +78,9 @@ function status_back(){
     document.getElementById("status_back_btn").style.display = "none";
     document.getElementById("status").style.display = "none";
 }
+
+$(document).ready(function () {
+    $('select').selectize({
+        sortField: 'text'
+    });
+});

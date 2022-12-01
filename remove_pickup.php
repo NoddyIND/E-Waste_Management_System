@@ -7,7 +7,7 @@ include 'sqlconn.php';
 $id = $_GET["deleteid"];
 $email = $_SESSION["email"];
 
-$sql1 = "delete from pickup where id = $id and email = '$email';";
+$sql1 = "delete from selects where select_id = $id and schedule_id = 0;";
 $result = mysqli_query($conn, $sql1);
 if ($result == true) {
     echo "<script type='text/javascript'>

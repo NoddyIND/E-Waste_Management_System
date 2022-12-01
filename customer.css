@@ -1,23 +1,4 @@
-<?php
-session_start();
-if (!isset($_SESSION["loggedIn"]) || !$_SESSION["loggedIn"]) {
-    header("Location: index.html");
-}
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
-    <title>Document</title>
-    
-    <style>
-      @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
       
         
       * {
@@ -220,62 +201,3 @@ tr:hover{
   background: white;
   border: 1px solid #17bd4e;
 }
-#btn_status[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-    </style>
-     <script src="pickup.js"></script>
-</head>
-<body>
-<button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
-    <div class="container">
-        <br>
-    <h1>Welcome <?php 
-    
-    include 'sqlconn.php';
-    $email = $_SESSION["email"];
-    $custid = $_SESSION["id"];
-    $sql = "select cust_name from customer where cust_id=$custid";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($result);
-    echo $row['cust_name'];
-    ?></h1>
-
-
-
-
-    <button id="request" style="margin-top:50px;" onclick="window.location.href='customer/formDisplay.php'">Request for Pickup</button>
-
-    
-
-
-    
-    
-    <br>
-    <button id="btn_status" style="margin-top:50px;" onclick="window.location.href='customer/pickup_status.php'" disabled>See Your Requests</button><br>
-    <?php
-      $sql5 = "select s.select_id as select_id, w.name as name, s.qty as qty from selects as s join waste as w on w.waste_id = s.waste_id join customer as c on c.cust_id = s.cust_id where s.schedule_id=0 and c.cust_id = $custid;";
-      $result5 = mysqli_query($conn, $sql5);
-      if(mysqli_fetch_assoc($result5)==true)
-      {
-        echo '<script>
-        document.getElementById("btn_status").disabled = false;
-      </script>';
-      }
-      else{
-        echo '<script>
-        document.getElementById("btn_status").disabled = true;
-      </script>';
-      }
-    ?>
-    <button id="" style="margin-top:50px;" onclick="window.location.href='customer/schedule_requests.php'">Scheduled Requests</button><br>
-   
-    <button id="achievement" style="margin-top:50px;" onclick="window.location.href='customer/achievement.php'">Your Achievements</button>
-    </div>
-
-    
-   
-</body>
-</html>

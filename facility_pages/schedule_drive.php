@@ -3,6 +3,35 @@ session_start();
 if (!isset($_SESSION["loggedIn"]) || !$_SESSION["loggedIn"]) {
     header("Location: facility_login.html");
 }
+
+include '../sqlconn.php';
+$idQuery = "SELECT facility_id FROM facility_center WHERE email = '".$_SESSION['email']."' ";
+			$querExec = mysqli_query($conn, $idQuery);
+			$id = mysqli_fetch_assoc($querExec);
+
+
+if(isset($_POST['select_driver'])){
+    $scheduleQuery = "INSERT INTO schedule(drive_id, facility_id, schedule_date, start_time, finish_time) VALUES(".$_POST['select_driver'].",".$id['facility_id'].",'".$_POST['schedule_date']."','".$_POST['start_time']."','".$_POST['finish_time']."')";
+    $run =  mysqli_query($conn, $scheduleQuery);
+	
+    if ($run == true) {
+        echo "<script type='text/javascript'>
+        alert('Drive Scheduled successfully!');
+        
+     </script>";
+	 $sqlupdate = "Update drive set is_free = 1 where drive_id = ".$_POST['select_driver']."";
+	$run1 = mysqli_query($conn, $sqlupdate);
+	$sqlselect = "select schedule_id from schedule order by schedule_id desc limit 1";
+	$run2 = mysqli_query($conn, $sqlselect);
+	$row3 = mysqli_fetch_assoc($run2);
+	$sqlupdateselects = "Update selects SET schedule_id = ".$row3['schedule_id']." WHERE facility_id = ".$id['facility_id']." and is_collected=0 and schedule_id = 0";
+	$run3 = mysqli_query($conn, $sqlupdateselects);
+    } else {
+        echo '<script> alert("Error while inserting") </script>';
+    
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -111,16 +140,34 @@ h1 {
 }
 </style>
 <body>
-<button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
+<button class="logout-btn" onclick="window.location.href='../logout.php'">Logout</button>
 <div class="container" id="container">
+	<br>
+<form action="schedule_drive.php" method ="POST">
+<select id="select_driver" name="select_driver" class="form-select form-select mb-3" aria-label=".form-select-lg example">
+  <option selected>Select a Driver</option>
+  <?php
+            $sql = "SELECT drive_id FROM drive WHERE facility_id = ".$id['facility_id']." AND is_free=0";
+            $result = mysqli_query($conn, $sql);
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo '<option value="' .$row["drive_id"].'">' .$row["drive_id"]. '</option>';
+            }
+          ?>
+</select>
 
-<a class="btn btn-success btn-lg" href="facility_pages/pickup_req_data.php" role="button" style="margin-top: 50px;">See Request Status</a><br>
+<label for="schedule_date">schedule date:</label>
+<input data-provide="datepicker" type="date" id="schedule_date" name="schedule_date">
 
-<a class="btn btn-success btn-lg" href="facility_pages/show_drive_status.php" role="button" style="margin-top: 50px;">View Secheduled Drives</a><br>
+<label for="start_time">Select a start time:</label>
+<input type="time" id="start_time" name="start_time">
 
-<a class="btn btn-success btn-lg" href="facility_pages/sort.php" role="button" style="margin-top: 50px;">Sort Waste</a><br>
+<label for="finish_time">Select a finish time:</label>
+<input type="time" id="finish_time" name="finish_time">
 
-<a class="btn btn-success btn-lg" href="facility_pages/achievement.php" role="button" style="margin-top: 50px;">Achievements</a>
+<input type="submit" class="btn btn-success btn-lg">
+</form>
+
+<a class="btn btn-success btn-lg" href="../facility_dashboard.php" role="button" style="margin-top: 30px; margin-bottom:10px;">Back</a>
 </div>
     
 

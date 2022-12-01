@@ -3,6 +3,8 @@ session_start();
 if (!isset($_SESSION["loggedIn"]) || !$_SESSION["loggedIn"]) {
     header("Location: facility_login.html");
 }
+$email = $_SESSION["email"];
+include '../sqlconn.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -111,20 +113,40 @@ h1 {
 }
 </style>
 <body>
-<button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
+<button class="logout-btn" onclick="window.location.href='../logout.php'">Logout</button>
 <div class="container" id="container">
-
-<a class="btn btn-success btn-lg" href="facility_pages/pickup_req_data.php" role="button" style="margin-top: 50px;">See Request Status</a><br>
-
-<a class="btn btn-success btn-lg" href="facility_pages/show_drive_status.php" role="button" style="margin-top: 50px;">View Secheduled Drives</a><br>
-
-<a class="btn btn-success btn-lg" href="facility_pages/sort.php" role="button" style="margin-top: 50px;">Sort Waste</a><br>
-
-<a class="btn btn-success btn-lg" href="facility_pages/achievement.php" role="button" style="margin-top: 50px;">Achievements</a>
-</div>
     
+<table class="table table-bordered table-hover" style="margin-top: 50px;">
+            <thead>
+                <tr>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Waste</th>
+					<th scope="col">Quantity</th>
+                    <th scope="col">Collect</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            $fetchid = "select drive_id from drive where email = '$email'";
+			$exefetchid = mysqli_query($conn, $fetchid);
+			$rowid = mysqli_fetch_assoc($exefetchid);
+			$locationQuery = "SELECT facility_id FROM drive WHERE email = '".$_SESSION['email']."' ";
+			$querExec = mysqli_query($conn, $locationQuery);
+			$loc = mysqli_fetch_assoc($querExec);
+			$sql = "SELECT s.qty, w.name, w.weight, c.cust_name, s.select_id FROM selects as s JOIN waste as w ON w.waste_id = s.waste_id JOIN customer as c ON c.cust_id = s.cust_id JOIN schedule as sch on sch.schedule_id = s.schedule_id WHERE s.is_collected = 0 AND s.facility_id = ".$loc['facility_id']." and sch.drive_id=".$rowid['drive_id'].";";
+			
+			$result = mysqli_query($conn, $sql);
+              while ($row = mysqli_fetch_assoc($result)) {
+                  echo '<tr><td>' . $row["cust_name"] . '</td><td>' . $row['name'] .'</td><td>'. $row['qty'] .'</td>';
+                  echo '<td><a class="btn btn-success" href="collect.php?id='.$row["select_id"].'" role="button">Collect</a></td></tr>';
+              }
 
-   
+              ?>
+            </tbody>
+        </table>
 
+		<button style="margin-top: 20px;" onclick="window.location.href='driver_home.php'" class="btn btn-success btn-lg">Back</button>
+
+</div>
 </body>
 </html>

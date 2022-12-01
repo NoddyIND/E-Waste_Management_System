@@ -2,7 +2,11 @@
 session_start();
 if (!isset($_SESSION["loggedIn"]) || !$_SESSION["loggedIn"]) {
     header("Location: facility_login.html");
+    
+    
 }
+include '../sqlconn.php';
+$id = $_GET['id'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,11 +81,37 @@ input {
 }
 
 h1 {
-	font-weight: bold;
+	font-weight:30;
 	color: white;
 	margin: 0;
 }
 
+/* button {
+	margin-left: 150px;
+	width: 50%;
+	border-radius: 10px;
+	border: 0px solid;
+	background-color: #17bd4e;
+	color: #FFFFFF;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 12px 45px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	transition: transform 80ms ease-in;
+	height: 50px;
+}
+button:hover{
+	color: green;
+  border: 1px solid #17bd4e;
+	background-color: white;
+} */
+
+.backbtn{
+	margin-left: 0px;
+	width: 300px;
+	margin-top: 30px;
+}
 .logout-btn{
 	margin-top: 70px;
     margin-left: 70%;
@@ -103,24 +133,27 @@ h1 {
   border: 1px solid #17bd4e;
 	background-color: white;
 }
-
-.backbtn{
-	margin-left: 0px;
-	width: 300px;
-	margin-top: 30px;
-}
 </style>
 <body>
-<button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
+<button class="logout-btn" onclick="window.location.href='../logout.php'">Logout</button>
 <div class="container" id="container">
+<h3 style="color:white; margin-top:10px; margin-bottom:30px;">Change Schedule Time</h3>
+<form action="edit_process.php" method ="POST">
+<input type="text" name="id" id="id" value=<?php echo $id;?> hidden>
+<label for="schedule_date">schedule date:</label>
+<input data-provide="datepicker" type="date" id="schedule_date" name="schedule_date">
 
-<a class="btn btn-success btn-lg" href="facility_pages/pickup_req_data.php" role="button" style="margin-top: 50px;">See Request Status</a><br>
+<label for="start_time">Select a start time:</label>
+<input type="time" id="start_time" name="start_time">
 
-<a class="btn btn-success btn-lg" href="facility_pages/show_drive_status.php" role="button" style="margin-top: 50px;">View Secheduled Drives</a><br>
+<label for="finish_time">Select a finish time:</label>
+<input type="time" id="finish_time" name="finish_time">
 
-<a class="btn btn-success btn-lg" href="facility_pages/sort.php" role="button" style="margin-top: 50px;">Sort Waste</a><br>
+<input type="submit" class="btn btn-success btn-lg">
+</form>
 
-<a class="btn btn-success btn-lg" href="facility_pages/achievement.php" role="button" style="margin-top: 50px;">Achievements</a>
+<button style="margin-top: 20px;" onclick="window.location.href='show_drive_status.php'" class="btn btn-success btn-lg">Back</button>
+      
 </div>
     
 

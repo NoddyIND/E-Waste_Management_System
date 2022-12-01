@@ -13,7 +13,7 @@ $id = $_POST["id"];
 
 
 
-$sql1 = "update pickup set wid = $wid, qty = $qty where id=$id and email = '$email'";
+$sql1 = "update selects set waste_id = $wid, qty = $qty where select_id = $id and schedule_id=0;";
 $result = mysqli_query($conn, $sql1);
 if ($result == true) {
     echo "<script type='text/javascript'>

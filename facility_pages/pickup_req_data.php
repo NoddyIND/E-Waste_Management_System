@@ -83,27 +83,6 @@ h1 {
 	margin: 0;
 }
 
-/* button {
-	margin-left: 150px;
-	width: 50%;
-	border-radius: 10px;
-	border: 0px solid;
-	background-color: #17bd4e;
-	color: #FFFFFF;
-	font-size: 12px;
-	font-weight: bold;
-	padding: 12px 45px;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	transition: transform 80ms ease-in;
-	height: 50px;
-}
-button:hover{
-	color: green;
-  border: 1px solid #17bd4e;
-	background-color: white;
-} */
-
 .backbtn{
 	margin-left: 0px;
 	width: 300px;
@@ -224,11 +203,15 @@ button:hover{
 <button class="logout-btn" onclick="window.location.href='../logout.php'">Logout</button>
 <div class="container" id="container">
 
-<h1 style="margin-top:30px ;">Kothrud Request Data</h1>
 
 
 <?php
-$sql = "select w.weight as weight, p.email, p.id, u.name, w.waste_type, p.qty as qty from pickup as p join user as u on u.email = p.email join waste_types as w on w.waste_id = p.wid where u.address = 'Kothrud' and p.is_collected = 0";
+$total = 0;
+$locationQuery = "SELECT location FROM facility_center WHERE email = '".$_SESSION['email']."' ";
+$querExec = mysqli_query($conn, $locationQuery);
+$loc = mysqli_fetch_assoc($querExec);
+echo "<h1 style='margin-top:30px ;'>".$loc['location']." Pickup Requests</h1>";
+$sql = "SELECT s.qty, w.name, w.weight, s.cust_id, s.select_id FROM selects as s JOIN waste as w ON w.waste_id = s.waste_id JOIN customer as c ON c.cust_id = s.cust_id WHERE c.address = '".$loc['location']."' and s.schedule_id =0";
 $result = mysqli_query($conn, $sql);
 
 if(mysqli_fetch_assoc($result) == false)
@@ -239,7 +222,6 @@ if(mysqli_fetch_assoc($result) == false)
 else{
     mysqli_free_result($result);
     $result = mysqli_query($conn, $sql);
-    $total = 0;
     while ($row = mysqli_fetch_assoc($result)) {
         $total = $total + ($row['weight']*$row['qty']);
   
@@ -266,11 +248,13 @@ else{
             </div>
           </div>
 
+      
+         
 
+          <a class="btn btn-success btn-lg" href="pickup_req.php" role="button" style="margin-top: 30px;">Details</a><br>
 
-          <a class="btn btn-success btn-lg" href="kothrud_pickup_req.php" role="button" style="margin-top: 50px;">Details</a><br>
+          <a class ="btn btn-success btn-lg" href = "schedule_drive.php" role = "button" style = "margin-top: 30px;">Schedule drive</a><br>
 
-          <a class="btn btn-success btn-lg" href="kothrud_pickup_collect_all.php" role="button" style="margin-top: 30px;">Collect all</a><br>
         <?php
 
             }
@@ -278,7 +262,7 @@ else{
 
 
         
-        <a class="btn btn-success btn-lg" href="kothrud.php" role="button" style="margin-top: 30px; margin-bottom:10px;">Back</a>
+        <a class="btn btn-success btn-lg" href="../facility_dashboard.php" role="button" style="margin-top: 30px; margin-bottom:10px;">Back</a>
 
 </div>
     

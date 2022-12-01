@@ -2,6 +2,10 @@
 session_start();
 if (!isset($_SESSION["loggedIn"]) || !$_SESSION["loggedIn"]) {
     header("Location: facility_login.html");
+    include 'sqlconn.php';
+    $email = $_SESSION["email"];
+    $custid = $_SESSION["id"];
+    
 }
 ?>
 <!DOCTYPE html>
@@ -77,11 +81,37 @@ input {
 }
 
 h1 {
-	font-weight: bold;
+	font-weight:30;
 	color: white;
 	margin: 0;
 }
 
+/* button {
+	margin-left: 150px;
+	width: 50%;
+	border-radius: 10px;
+	border: 0px solid;
+	background-color: #17bd4e;
+	color: #FFFFFF;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 12px 45px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	transition: transform 80ms ease-in;
+	height: 50px;
+}
+button:hover{
+	color: green;
+  border: 1px solid #17bd4e;
+	background-color: white;
+} */
+
+.backbtn{
+	margin-left: 0px;
+	width: 300px;
+	margin-top: 30px;
+}
 .logout-btn{
 	margin-top: 70px;
     margin-left: 70%;
@@ -103,24 +133,12 @@ h1 {
   border: 1px solid #17bd4e;
 	background-color: white;
 }
-
-.backbtn{
-	margin-left: 0px;
-	width: 300px;
-	margin-top: 30px;
-}
 </style>
 <body>
-<button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
+<button class="logout-btn" onclick="window.location.href='../logout.php'">Logout</button>
 <div class="container" id="container">
 
-<a class="btn btn-success btn-lg" href="facility_pages/pickup_req_data.php" role="button" style="margin-top: 50px;">See Request Status</a><br>
 
-<a class="btn btn-success btn-lg" href="facility_pages/show_drive_status.php" role="button" style="margin-top: 50px;">View Secheduled Drives</a><br>
-
-<a class="btn btn-success btn-lg" href="facility_pages/sort.php" role="button" style="margin-top: 50px;">Sort Waste</a><br>
-
-<a class="btn btn-success btn-lg" href="facility_pages/achievement.php" role="button" style="margin-top: 50px;">Achievements</a>
 </div>
     
 

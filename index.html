@@ -17,11 +17,7 @@
 * {
 	box-sizing: border-box;
 }
-.admin-btn{
-	display: inline;
-	margin-left: 70%;
-	margin-bottom: 30px;
-}
+
 button:hover{
 	color: #17bd4e;
 	background-color: white;
@@ -257,12 +253,22 @@ input {
 .link-color:hover{
 	color:green;
 }
-
+.drive-login{
+	margin-left: 80%;
+	margin-top: -69px;
+	margin-bottom: 30px;
+}
+.admin-btn{
+	display: inline-block;
+	margin-left: 50%;
+	margin-bottom: 30px;
+}
 
     </style>
 </head>
 <body>
-	<button class="admin-btn" onclick="window.location.href='facility_login.html'">Admin Login </button>
+	<button class="admin-btn" onclick="window.location.href='facility_login.html'">Admin Login</button>
+	<button class="drive-login" onclick="window.location.href = 'driver_pages/driver_login.php'">Driver login</button>
     <div class="container" id="container">
         <div class="form-container sign-in-container">
             <form action="login.php" method = "POST">

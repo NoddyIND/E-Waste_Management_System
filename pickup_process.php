@@ -6,23 +6,19 @@ if (!isset($_SESSION["loggedIn"]) || !$_SESSION["loggedIn"]) {
 
 
 include 'sqlconn.php';
-$wid = $_POST["wid"];
+$wid = $_POST["select_state"];
 $qty = $_POST["qty"];
-$email = $_POST["useremail"];
+$custid = $_SESSION["id"];
 
 
-$sql1 = "select * from user";
+$sql1 = "SELECT address as location FROM customer WHERE email = '".$_SESSION['email']."'";
 $result = mysqli_query($conn, $sql1);
-while ($row = mysqli_fetch_assoc($result)) {
-    if ($row['email'] == $email) {
-        $name = $row['name'];
-        $address = $row['address'];
-        $phone = $row['phone'];
-        break;
-    }
-}
+$row = mysqli_fetch_assoc($result);
 
-$sql = "INSERT INTO pickup(email, wid, qty) VALUES ('$email',$wid,$qty)";
+$sql2 = "SELECT facility_id FROM facility_center WHERE location = '".$row['location']."'";
+$result = mysqli_query($conn, $sql2);
+$row = mysqli_fetch_assoc($result);
+$sql = "INSERT INTO selects(cust_id, waste_id, qty, req_date, facility_id) VALUES ($custid,$wid,$qty, now(),".$row['facility_id'].");";
 $run = mysqli_query($conn, $sql);
 if ($run == true) {
     echo "<script type='text/javascript'>

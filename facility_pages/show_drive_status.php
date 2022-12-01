@@ -1,9 +1,14 @@
 <?php
-include '../sqlconn.php';
 session_start();
 if (!isset($_SESSION["loggedIn"]) || !$_SESSION["loggedIn"]) {
-    header("Location: facility_login.html");
+    header("Location: facility_login.html");   
 }
+include '../sqlconn.php';
+$email = $_SESSION["email"];
+$idQuery = "SELECT facility_id FROM facility_center WHERE email = '".$_SESSION['email']."' ";
+			$querExec = mysqli_query($conn, $idQuery);
+			$id = mysqli_fetch_assoc($querExec);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -83,9 +88,17 @@ h1 {
 	margin: 0;
 }
 
-/* button {
-	margin-left: 150px;
-	width: 50%;
+
+.backbtn{
+	margin-left: 0px;
+	width: 300px;
+	margin-top: 30px;
+}
+.logout-btn{
+	margin-top: 70px;
+    margin-left: 70%;
+	margin-bottom: 30px;
+	width: 150px;
 	border-radius: 10px;
 	border: 0px solid;
 	background-color: #17bd4e;
@@ -95,71 +108,49 @@ h1 {
 	padding: 12px 45px;
 	letter-spacing: 1px;
 	text-transform: uppercase;
-	transition: transform 80ms ease-in;
 	height: 50px;
 }
-button:hover{
+.logout-btn:hover{
 	color: green;
   border: 1px solid #17bd4e;
 	background-color: white;
-} */
-
-.backbtn{
-	margin-left: 0px;
-	width: 300px;
-	margin-top: 30px;
 }
 </style>
 <body>
-
+<button class="logout-btn" onclick="window.location.href='../logout.php'">Logout</button>
 <div class="container" id="container">
 
-<h1 style="margin-top:30px ;">Kothrud Pickup Requests</h1>
-
-
-<?php
-$sql = "select p.email, p.id, u.name, w.waste_type, p.qty from pickup as p join user as u on u.email = p.email join waste_types as w on w.waste_id = p.wid where u.address = 'Kothrud' and p.is_collected = 0";
-$result = mysqli_query($conn, $sql);
-
-if(mysqli_fetch_assoc($result) == false)
-{
-    echo '<h3 style="margin-top:50px; "> Nothing to Display</h3>';
-}
-else{
-
-
-
-?>
-
-<table class="table table-bordered table-hover" style="margin-top: 50px;">
+<div id="detail">
+          <div>
+            <br><br>
+            <div>
+        <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th scope="col">Customer Name</th>
-                    <th scope="col">Waste Name</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Collect</th>
+                    <th scope="col">Drive ID</th>
+                    <th scope="col">Schedule_date</th>
+                    <th scope="col">Start Time</th>
+                    <th scope="col">Finish Time</th>
+					<th scope="col">Edit</th>
                 </tr>
             </thead>
             <tbody>
             <?php
-            
-              $sql = "select p.email, p.id, u.name, w.waste_type, p.qty from pickup as p join user as u on u.email = p.email join waste_types as w on w.waste_id = p.wid where u.address = 'Kothrud' and p.is_collected = 0";
-              $result = mysqli_query($conn, $sql);
-              while ($row = mysqli_fetch_assoc($result)) {
+              $sql4 = "SELECT d.drive_id, s.schedule_date, s.start_time, s.finish_time,s.schedule_id  FROM drive as d join schedule as s on d.drive_id = s.drive_id where d.facility_id=".$id['facility_id']." and d.is_free=1 and s.is_completed=0;";
+              $result4 = mysqli_query($conn, $sql4);
+              while ($row2 = mysqli_fetch_assoc($result4)) {
                   
-                  echo '<tr><td>' . $row["name"] . '</td><td>' . $row["waste_type"] . '</td><td>' . $row['qty'] .'</td><td><a class="btn btn-success" href="kothrud_pickup_collect.php?email=' . $row["email"] .'&id='.$row["id"].'" role="button">Collect</a></td>';
+                  echo '<tr><td>' . $row2["drive_id"] . '</td><td>' . $row2["schedule_date"] . '</td><td>'. $row2["start_time"] .'</td><td>'. $row2["finish_time"] .'</td><td><button class="btn btn-danger"><a style="text-decoration:none;" href="edit.php?id='. $row2["schedule_id"] .'" class="text-light">Edit</a></button></td>';
               }
 
               ?>
             </tbody>
         </table>
-
-        <?php
-
-            }
-            ?>
-
-        <a class="btn btn-success btn-lg" href="kothrud_pickup_req_data.php" role="button" style="margin-top: 50px;">Back</a>
+    </div>
+            
+          </div>
+          <button style="margin-top: 20px;" onclick="window.location.href='../facility_dashboard.php'" class="btn btn-success btn-lg">Back</button>
+        </div>
 
 </div>
     

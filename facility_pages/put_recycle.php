@@ -6,11 +6,10 @@ if (!isset($_SESSION["loggedIn"]) || !$_SESSION["loggedIn"]) {
 }
 
 $id = $_GET['id'];
-$email = $_GET['email'];
 
-$updateQuery = "UPDATE pickup SET recycle_decompose = 1 where id = $id and email='$email' and is_collected = 1";
+$updateQuery = "INSERT INTO recycle_decompose(select_id, recycle_decompose) VALUES($id, 1)";
             if(mysqli_query($conn, $updateQuery)){
-                header("refresh:0.2;url=kothrud_sort.php");
+                header("refresh:0.2;url=sort.php");
             }
             else{
                 echo '<script>window.alert("Cannot Update");</script>';

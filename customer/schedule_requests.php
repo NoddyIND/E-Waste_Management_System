@@ -2,7 +2,12 @@
 session_start();
 if (!isset($_SESSION["loggedIn"]) || !$_SESSION["loggedIn"]) {
     header("Location: facility_login.html");
+    
+    
 }
+include '../sqlconn.php';
+$email = $_SESSION["email"];
+$custid = $_SESSION["id"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,11 +82,18 @@ input {
 }
 
 h1 {
-	font-weight: bold;
+	font-weight:30;
 	color: white;
 	margin: 0;
 }
 
+
+
+.backbtn{
+	margin-left: 0px;
+	width: 300px;
+	margin-top: 30px;
+}
 .logout-btn{
 	margin-top: 70px;
     margin-left: 70%;
@@ -103,24 +115,35 @@ h1 {
   border: 1px solid #17bd4e;
 	background-color: white;
 }
-
-.backbtn{
-	margin-left: 0px;
-	width: 300px;
-	margin-top: 30px;
-}
 </style>
 <body>
-<button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
+<button class="logout-btn" onclick="window.location.href='../logout.php'">Logout</button>
 <div class="container" id="container">
 
-<a class="btn btn-success btn-lg" href="facility_pages/pickup_req_data.php" role="button" style="margin-top: 50px;">See Request Status</a><br>
+<h3 style="color: white; margin-top:20px; ">Your Schedules</h3>
+<table class="table table-bordered table-hover" style="margin-top:30px;">
+            <thead>
+                <tr>
+                    <th scope="col">Waste Name</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+                $sql = "select s.select_id as select_id, w.name as name, s.qty as qty, sch.schedule_id, sch.start_time, sch.finish_time, sch.schedule_date from selects as s join waste as w on w.waste_id = s.waste_id join customer as c on c.cust_id = s.cust_id join schedule as sch on sch.schedule_id = s.schedule_id where s.schedule_id !=0 and c.cust_id = $custid and s.is_collected=0;";
+                $result = mysqli_query($conn, $sql);
+                while ($row = mysqli_fetch_assoc($result)) {
+                  echo '<tr><td>' . $row["name"] . '</td><td>' . $row["qty"] . '</td><td>'.$row["schedule_date"].'</td><td>'.$row["start_time"].' - '.$row["finish_time"].'</td></tr>';
+                }
+                
+              ?>
+            </tbody>
+        </table>
 
-<a class="btn btn-success btn-lg" href="facility_pages/show_drive_status.php" role="button" style="margin-top: 50px;">View Secheduled Drives</a><br>
 
-<a class="btn btn-success btn-lg" href="facility_pages/sort.php" role="button" style="margin-top: 50px;">Sort Waste</a><br>
-
-<a class="btn btn-success btn-lg" href="facility_pages/achievement.php" role="button" style="margin-top: 50px;">Achievements</a>
+        <button id="status_back_btn" class="btn btn-success" onclick="window.location.href='../pickup.php'">Back</button>  
 </div>
     
 
